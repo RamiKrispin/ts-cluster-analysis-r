@@ -1,0 +1,26 @@
+{
+    "name": "R Dev Environment",
+    "image": "docker.io/rkrispin/r-dev:${localEnv:CPU}.4.4.0",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // R Extensions
+                "reditorsupport.r",
+                "rdebugger.r-debugger",
+                "posit.shiny",
+                // Documentation Extensions
+                "quarto.quarto",
+                "purocean.drawio-preview",
+                "redhat.vscode-yaml",
+                "yzhang.markdown-all-in-one",
+                // Docker Supporting Extensions
+                "ms-azuretools.vscode-docker",
+                "ms-vscode-remote.remote-containers",
+                // Python Extensions
+                "ms-python.python",
+                "ms-toolsai.jupyter"
+            ]
+        }
+    },
+    "postStartCommand": "until [ -f /root/.vscode-R/init.R ]; do sleep 0.1; done; radian"
+}
