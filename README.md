@@ -1,35 +1,18 @@
-# A VScode Template for Dockerized R Environment
+# Analyzing Time Series at Scale with Cluster Analysis in R
 
-This Github repository provides a template for a dockerized R development environment with VScode and the Dev Containers extension. It contains the following folders and files:
+WIP...
+
+Materials for the [Analyzing Time Series at Scale with Cluster Analysis in R](https://sites.google.com/view/dariia-mykhailyshyna/main/r-workshops-for-ukraine#h.9rof53i542dh) workshop for Ukraine.
+
+**When 📆:** Thursday, October 17th, 18:00 - 20:00 CEST 
+
+**Description:** One of the challenges in traditional time series analysis is scalability. Most of the analysis methods were designed to handle a single time series at a time. In this workshop, we will explore methods for analyzing time series at scale. We will demonstrate how to apply unsupervised methods such as cluster analysis and PCA to analyze and extract insights from multiple time series simultaneously. This workshop is based on Prof. Rob J Hyndman's paper about feature-based time series analysis.
 
 
+<figure>
+ <img src="images/cluster.png" width="100%" align="center"/></a>
+<figcaption> Cluster Analysis (created with Midjourney)</figcaption>
+</figure>
 
-```shell
-.
-├── README.md
-├── .devcontainer
-│   └── devcontainer.json
-├── .vscode
-│   └── settings.json
-├── docker
-│   ├── Dockerfile
-│   ├── build_docker.sh
-│   ├── devcontainer.json
-│   ├── install_packages.R
-│   ├── install_quarto.sh
-│   ├── packages.json
-│   └── requirements.txt
-└── tests
-    ├── app.R
-    ├── htmlwidgets.R
-    └── plot.R
-
-```
-
-It includes the following folders and files:
-- `.devcontainer` - defines the dockerized environment settings with the `devcontainer.json` file
-- `.vscode` - enables the modification of the VScode general settings for the dockerized environment with the `settings.json` file
-- `docker` - contains the template image settings
-- `tests` - R scripts for testing the environment functionality (e.g., Shiny app, static and interactive plots, etc.)
-
-The template default image in the template is `rkrispin/vscode_r_dev:0.1.0`, which comes with R version `4.3.1` and core packages (e.g., `dplyr`, `shiny`, `ggplot2`, `plotly`, etc.). 
+<br>
+<br />
