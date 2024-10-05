@@ -4,7 +4,7 @@ echo "Build the docker"
 
 # Parameters
 user_name="rkrispin"
-image_label="r-dev"
+image_label="ts-cluster-workshop"
 r_major=4
 r_minor=4
 r_patch=0
