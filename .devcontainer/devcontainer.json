@@ -1,6 +1,6 @@
 {
     "name": "R Dev Environment",
-    "image": "docker.io/rkrispin/r-dev:${localEnv:CPU}.4.4.0",
+    "image": "docker.io/rkrispin/ts-cluster-workshop:${localEnv:CPU}.4.4.0",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -21,6 +21,9 @@
                 "ms-toolsai.jupyter"
             ]
         }
+    },
+    "remoteEnv": {
+        "EIA_API_KEY": "${localEnv:EIA_API_KEY}"
     },
     "postStartCommand": "until [ -f /root/.vscode-R/init.R ]; do sleep 0.1; done; radian"
 }
