@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rami Krispin">
-<meta name="dcterms.date" content="2024-10-12">
+<meta name="dcterms.date" content="2024-10-13">
 
 <title>Features Engineering</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 12, 2024</p>
+      <p class="date">October 13, 2024</p>
     </div>
   </div>
   
@@ -396,6 +396,12 @@ TRUE
 5    0.6569552   Alabama     VIN  4.075354  0.3044582 -1.6657347
 6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529</code></pre>
 </div>
+</div>
+<p>Save the features table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(features, <span class="at">file =</span> <span class="st">"./data/features.RDS"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(features, <span class="st">"./data/features.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 

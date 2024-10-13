@@ -148,3 +148,12 @@ features <- cbind(features_clean, as.data.frame(pca$x[, 1:3]))
 head(features)
 
 ```
+
+
+Save the features table:
+
+```{r}
+saveRDS(features, file = "./data/features.RDS")
+
+write.csv(features, "./data/features.csv", row.names = FALSE)
+```
