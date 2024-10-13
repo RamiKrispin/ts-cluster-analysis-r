@@ -1,6 +1,9 @@
 library(shiny)
 library(bslib)
 
+
+features <- read.csv(file = "https://raw.githubusercontent.com/RamiKrispin/ts-cluster-analysis-r/refs/heads/main/data/features.csv")
+head(features)
 # Define UI for app that draws a histogram ----
 ui <- page_sidebar(
     # App title ----
