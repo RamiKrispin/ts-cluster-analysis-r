@@ -67,11 +67,40 @@ unique(d$process)
 unique(d$process_name)
 ```
 
+```{r}
+states_abb <- data.frame(name = state.name, name_lower = tolower(state.name), code = state.abb)
+
+d$area_name_lower <- tolower(d$area_name)
+
+d1 <- d |>
+    dplyr::left_join(states_abb |> dplyr::select(name_lower, code), by = c("area_name_lower" = "name_lower"))
+
+
+d1$area_code <- NA
+d1$area_code <- ifelse(nchar(d1$area_name) == 6, substr(d1$area_name, start = 5, stop = 6), d1$code)
+d1$area_code <- ifelse(d1$area_name == "U.S.", "US", d1$area_code)
+
+d2 <- d1 |>
+    dplyr::left_join(
+        states_abb |>
+            dplyr::select(name, code),
+        by = c("area_code" = "code")
+    ) |>
+    dplyr::select(area_name = name, area_code, process, process_name, date, value, units, description)
+
+d2$area_name <- ifelse(is.na(d2$area_name) & d2$area_code == "US", "USA", d2$area_name)
+d2$area_name <- ifelse(is.na(d2$area_name) & d2$area_code == "DC", "Washington, D.C.", d2$area_name)
+
+
+table(d2$area_code, useNA = "always")
+table(d2$area_name, useNA = "always")
+```
+
 
 
 
 ```{r}
-d |>
+d2 |>
     dplyr::filter(process_name == "Vehicle Fuel Consumption") |>
     dplyr::arrange(area_name, process_name, date) |>
     plotly::plot_ly(
@@ -87,7 +116,7 @@ d |>
 
 
 ```{r}
-us_gas <- d
+us_gas <- d2
 saveRDS(us_gas, file = "./data/us_gas.RDS")
 
 us_gas_csv <- d |> dplyr::select(area_name, process_name, date, description, value)

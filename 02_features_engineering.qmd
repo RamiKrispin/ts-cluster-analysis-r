@@ -1,0 +1,150 @@
+---
+title: "Features Engineering"
+author: "Rami Krispin"
+date: last-modified
+format: 
+  html:
+    code-fold: false
+---
+
+## Data
+
+Loading the saved data:
+
+```{r}
+us_gas <- readRDS(file = "./data/us_gas.RDS")
+
+head(us_gas)
+```
+
+
+Reformat the `data.frame` into a tsibble object:
+```{r}
+ts_obj <- us_gas |>
+    dplyr::select(date, area_name, process, value) |>
+    dplyr::mutate(index = tsibble::yearmonth(date)) |>
+    tsibble::as_tsibble(index = index, key = c(area_name, process))
+
+ts_obj
+
+keys <- attributes(ts_obj)$key
+```
+
+## Features Engineering
+
+The next step is to collapse the time series into a feature table. This includes looping over each series and:
+
+- Check for missing values and impute if possible
+- Drop series that does not have a sufficient number of observations
+- Calculate a set of features for each series
+
+We will use the [tsfeatures](https://pkg.robjhyndman.com/tsfeatures/) library to create for each series a set of features such as:
+
+- Trend
+- AutoCorrelation features
+- Arch stat features
+- Nonlinearity measurment feature
+
+
+```{r}
+features_df <- NULL
+features_df <- lapply(1:nrow(keys), function(i) {
+    d <- NULL
+    d <- ts_obj |>
+        dplyr::filter(
+            area_name == keys$area_name[i],
+            process == keys$process[i]
+        )
+
+    s <- TRUE
+    # Check for missing values and zeros
+    z <- which(d$value == 0)
+
+    m <- which(is.na(d$value))
+    if (length(m) > 0) {
+        if (length(m) < nrow(d) * 0.1 && length(z) == 0) {
+            if (any(diff(m) == 1)) {
+                x <- m[which(diff(m) == 1)]
+                for (n in x) {
+                    d$value[n] <- (d$value[n - 12] + d$value[n - 24] + d$value[n - 36]) / 3
+                }
+
+                y <- which(is.na(d$value))
+                if (length(y) > 0) {
+                    for (n in y) {
+                        if (n < nrow(d)) {
+                            d$value[n] <- (d$value[n - 1] + d$value[n + 1]) / 2
+                        } else {
+                            d$value[n] <- (d$value[n - 12] + d$value[n - 24]) / 2
+                        }
+                    }
+                }
+            } else {
+                for (n in m) {
+                    if (n < nrow(d)) {
+                        d$value[n] <- (d$value[n - 1] + d$value[n + 1]) / 2
+                    } else {
+                        d$value[n] <- (d$value[n - 12] + d$value[n - 24]) / 2
+                    }
+                }
+            }
+        } else {
+            s <- FALSE
+        }
+    }
+
+
+    if (s) {
+        f <- tsfeatures::tsfeatures(d$value)
+        f$arch_stat <- tsfeatures::arch_stat(d$value)
+        f <- cbind(f, t(as.data.frame(tsfeatures::autocorr_features(d$value))))
+        f$nonlinearity <- tsfeatures::nonlinearity(d$value)
+        f <- cbind(f, t(as.data.frame(tsfeatures::pacf_features(d$value))))
+
+        row.names(f) <- NULL
+        f$area_name <- keys$area_name[i]
+        f$process <- keys$process[i]
+        f$nperiods <- NULL
+        f$frequency <- NULL
+        f$seasonal_period <- NULL
+        f$success <- TRUE
+    } else {
+        f <- data.frame(success = FALSE)
+    }
+
+    return(f)
+}) |>
+    dplyr::bind_rows()
+
+
+
+head(features_df)
+nrow(features_df)
+table(features_df$success)
+
+```
+
+
+Remove missing values and failed calculations:
+
+```{r}
+features_clean <- na.omit(features_df)
+table(features_clean$success)
+
+features_clean <- features_clean |>
+    dplyr::filter(success) |>
+    dplyr::select(-success)
+```
+
+Calculating the PCA and merging its first three components with the features table: 
+
+```{r}
+pca <- features_clean |>
+    dplyr::select(-area_name, -process) |>
+    prcomp(scale = TRUE)
+
+features <- cbind(features_clean, as.data.frame(pca$x[, 1:3]))
+
+head(features)
+
+```
