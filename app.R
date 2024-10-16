@@ -96,12 +96,15 @@ ui <- page_navbar(
             )
         ),
         fluidRow(
+            column(
             plotly::plotlyOutput("pca_plot", height = "500px", width = "100%"),
+            width = 6),
+            column(plotly::plotlyOutput("series", height = "400px"), width = 6),
             conditionalPanel(
                 condition = "input.view == 'Cluster'",
                 plotly::plotlyOutput("cluster_plot", height = "400px")
-            ),
-            plotly::plotlyOutput("series", height = "400px")
+            )
+            
         )
     )
 )
@@ -199,12 +202,6 @@ server <- function(input, output) {
             x <- which(features$PC1 == d[1, "x"])
             y <- which(features$PC2 == d[1, "y"])
 
-            print(x)
-            print(y)
-
-print(features$area_name[x])
-print(features$process[x])
-print(head(ts))
 
             if (length(x) == 1 && x == y) {
                 t <- ts |>
