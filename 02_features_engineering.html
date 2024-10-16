@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rami Krispin">
-<meta name="dcterms.date" content="2024-10-13">
+<meta name="dcterms.date" content="2024-10-15">
 
 <title>Features Engineering</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 13, 2024</p>
+      <p class="date">October 15, 2024</p>
     </div>
   </div>
   
@@ -397,11 +397,74 @@ TRUE
 6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529</code></pre>
 </div>
 </div>
+<p>Scale the features table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>features_scale <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">scale</span>(features[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>]), features[, <span class="fu">c</span>(<span class="st">"area_name"</span>, <span class="st">"process"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calculate the K-means and merge it back to features table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>km2 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(features_scale[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>], <span class="at">centers =</span> <span class="dv">2</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>km3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(features_scale[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>], <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>km4 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(features_scale[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>], <span class="at">centers =</span> <span class="dv">4</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>km5 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(features_scale[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>], <span class="at">centers =</span> <span class="dv">5</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>features<span class="sc">$</span>cluster2 <span class="ot">&lt;-</span> km2[<span class="dv">1</span>]<span class="sc">$</span>cluster</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>features<span class="sc">$</span>cluster3 <span class="ot">&lt;-</span> km3[<span class="dv">1</span>]<span class="sc">$</span>cluster</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>features<span class="sc">$</span>cluster4 <span class="ot">&lt;-</span> km4[<span class="dv">1</span>]<span class="sc">$</span>cluster</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>features<span class="sc">$</span>cluster5 <span class="ot">&lt;-</span> km5[<span class="dv">1</span>]<span class="sc">$</span>cluster</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(features)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        trend        spike  linearity  curvature    e_acf1   e_acf10   entropy
+1 0.003057269 9.712750e-06 -0.9752748 -0.1708456 0.7523232 2.4133825 0.5646704
+2 0.948030396 6.726470e-07 -7.2015516 -3.0015766 0.4296742 0.4436997 0.4504870
+3 0.800618791 1.125195e-06 14.2253302 -3.1554623 0.5867871 0.8027259 0.3008994
+4 0.836803825 6.086026e-07 14.8085737 -1.5848186 0.3569556 1.0992692 0.2368032
+5 0.850064046 6.811054e-07 13.7873300  4.5584124 0.5766747 1.0069159 0.1810873
+6 0.055090260 9.327703e-06 -4.6036276 -0.2804776 0.7735770 2.5141998 0.5991920
+     x_acf1  x_acf10  diff1_acf1 diff1_acf10 diff2_acf1 diff2_acf10 arch_stat
+1 0.7530430 2.389684  0.29888389  0.57436812 -0.3554251   0.1948968 0.3704131
+2 0.9643920 7.019090 -0.18144404  0.07357371 -0.6279015   0.5012790 0.8498117
+3 0.9053211 5.520940  0.02418422  0.32177527 -0.4643220   0.3928694 0.7123761
+4 0.8877402 6.144797 -0.07201543  0.69852439 -0.4692256   0.4904081 0.5880839
+5 0.9334901 6.614953 -0.30579509  0.33282521 -0.6917163   0.8276553 0.6707924
+6 0.7845562 2.122313  0.45377070  0.79226036 -0.1257789   0.1624230 0.5199401
+  embed2_incircle_1 embed2_incircle_2        ac_9 firstmin_ac      trev_num
+1                 0                 0 -0.07868176           6 -7.229022e+07
+2                 0                 0  0.72951504          74  8.126437e+00
+3                 0                 0  0.68210089           4 -9.869577e+09
+4                 0                 0  0.67427730           3 -9.078644e+10
+5                 0                 0  0.77306245           6 -1.963808e+08
+6                 0                 0 -0.04204759           6  8.863228e+08
+  motiftwo_entro3 walker_propcross nonlinearity   x_pacf5 diff1x_pacf5
+1       1.5666745        0.1807512    0.9068600 0.9851775   0.20617291
+2       0.7702653        0.1264368    0.1082076 0.9606749   0.04383207
+3       1.2237333        0.2624113    0.1502996 0.9320975   0.15499032
+4       1.2732961        0.3120567    0.9465369 1.1507212   0.43904278
+5       1.2211373        0.2021277    0.5132332 1.0126882   0.16944682
+6       1.5166308        0.1666667    0.4290233 1.0753667   0.33320892
+  diff2x_pacf5 area_name process       PC1        PC2        PC3 cluster2
+1    0.2335997   Alabama     VCS -2.130900 -1.3036161  0.9384032        2
+2    0.6195178   Alabama     VDV  4.626793  1.4217552  1.0713550        1
+3    0.5246779   Alabama     VEU  2.536517  0.1059892 -1.3959387        1
+4    0.7932931   Alabama     VGT  2.799819  0.3110900 -2.1326149        1
+5    0.6569552   Alabama     VIN  4.075354  0.3044582 -1.6657347        1
+6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529        2
+  cluster3 cluster4 cluster5
+1        1        4        4
+2        2        2        1
+3        3        1        2
+4        3        1        2
+5        2        1        2
+6        1        3        3</code></pre>
+</div>
+</div>
 <p>Save the features table:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(features, <span class="at">file =</span> <span class="st">"./data/features.RDS"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(features, <span class="st">"./data/features.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(features, <span class="at">file =</span> <span class="st">"./data/features.RDS"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(features, <span class="st">"./data/features.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 

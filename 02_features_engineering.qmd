@@ -150,6 +150,32 @@ head(features)
 ```
 
 
+
+Scale the features table:
+
+```{r}
+features_scale <- cbind(scale(features[, 1:25]), features[, c("area_name", "process")])
+
+```
+Calculate the K-means and merge it back to features table:
+```{r}
+km2 <- kmeans(features_scale[, 1:25], centers = 2, nstart = 25)
+km3 <- kmeans(features_scale[, 1:25], centers = 3, nstart = 25)
+km4 <- kmeans(features_scale[, 1:25], centers = 4, nstart = 25)
+km5 <- kmeans(features_scale[, 1:25], centers = 5, nstart = 25)
+
+
+features$cluster2 <- km2[1]$cluster
+features$cluster3 <- km3[1]$cluster
+features$cluster4 <- km4[1]$cluster
+features$cluster5 <- km5[1]$cluster
+
+head(features)
+```
+
+
+
+
 Save the features table:
 
 ```{r}

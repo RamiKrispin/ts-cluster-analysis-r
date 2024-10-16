@@ -119,6 +119,6 @@ d2 |>
 us_gas <- d2
 saveRDS(us_gas, file = "./data/us_gas.RDS")
 
-us_gas_csv <- us_gas |> dplyr::select(area_name, process_name, date, description, value)
+us_gas_csv <- us_gas |> dplyr::select(area_name, process, process_name, date, description, value)
 write.csv(us_gas_csv, "./data/us_gas.csv", row.names = FALSE)
 ```
