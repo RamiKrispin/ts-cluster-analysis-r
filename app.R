@@ -202,13 +202,15 @@ server <- function(input, output) {
             print(x)
             print(y)
 
-
+print(features$area_name[x])
+print(features$process[x])
+print(head(ts))
 
             if (length(x) == 1 && x == y) {
                 t <- ts |>
                     dplyr::filter(
                         area_name == features$area_name[x],
-                        process_name == features$process[x]
+                        process == features$process[x]
                     ) |>
                     dplyr::arrange(date)
             }
