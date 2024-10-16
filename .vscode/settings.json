@@ -5,6 +5,7 @@
     "r.plot.useHttpgd": true,
     "r.lsp.diagnostics": false,
     "workbench.editor.showTabs": "multiple",
+    "editor.formatOnSave": true,
     "r.rterm.option": [
         "--no-save",
         "--no-restore",
