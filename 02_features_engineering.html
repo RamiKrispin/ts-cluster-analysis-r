@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rami Krispin">
-<meta name="dcterms.date" content="2024-10-15">
+<meta name="dcterms.date" content="2024-10-17">
 
 <title>Features Engineering</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 15, 2024</p>
+      <p class="date">October 17, 2024</p>
     </div>
   </div>
   
@@ -119,12 +119,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(us_gas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  area_name area_code process            process_name       date value units
-1  Arkansas        AR     VRS Residential Consumption 1989-06-01  1402  MMCF
-2  Arkansas        AR     VRS Residential Consumption 1990-09-01  1170  MMCF
-3  Arkansas        AR     VRS Residential Consumption 1990-12-01  4804  MMCF
-4  Arkansas        AR     VRS Residential Consumption 1992-12-01  6185  MMCF
-5  Arkansas        AR     VRS Residential Consumption 1993-01-01  8141  MMCF
-6  Arkansas        AR     VRS Residential Consumption 1993-02-01  7122  MMCF
+1  Arkansas        AR     VRS Residential Consumption 1993-01-01  8141  MMCF
+2  Arkansas        AR     VRS Residential Consumption 1996-06-01  1202  MMCF
+3  Arkansas        AR     VRS Residential Consumption 1997-10-01  1345  MMCF
+4  Arkansas        AR     VRS Residential Consumption 2000-04-01  2439  MMCF
+5  Arkansas        AR     VRS Residential Consumption 2003-04-01  3043  MMCF
+6  Arkansas        AR     VRS Residential Consumption 2003-11-01  2065  MMCF
                                           description
 1 Arkansas Natural Gas Residential Consumption (MMcf)
 2 Arkansas Natural Gas Residential Consumption (MMcf)
@@ -445,19 +445,19 @@ TRUE
 5       1.2211373        0.2021277    0.5132332 1.0126882   0.16944682
 6       1.5166308        0.1666667    0.4290233 1.0753667   0.33320892
   diff2x_pacf5 area_name process       PC1        PC2        PC3 cluster2
-1    0.2335997   Alabama     VCS -2.130900 -1.3036161  0.9384032        2
-2    0.6195178   Alabama     VDV  4.626793  1.4217552  1.0713550        1
-3    0.5246779   Alabama     VEU  2.536517  0.1059892 -1.3959387        1
-4    0.7932931   Alabama     VGT  2.799819  0.3110900 -2.1326149        1
-5    0.6569552   Alabama     VIN  4.075354  0.3044582 -1.6657347        1
-6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529        2
+1    0.2335997   Alabama     VCS -2.130900 -1.3036161  0.9384032        1
+2    0.6195178   Alabama     VDV  4.626793  1.4217552  1.0713550        2
+3    0.5246779   Alabama     VEU  2.536517  0.1059892 -1.3959387        2
+4    0.7932931   Alabama     VGT  2.799819  0.3110900 -2.1326149        2
+5    0.6569552   Alabama     VIN  4.075354  0.3044582 -1.6657347        2
+6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529        1
   cluster3 cluster4 cluster5
-1        1        4        4
-2        2        2        1
-3        3        1        2
-4        3        1        2
-5        2        1        2
-6        1        3        3</code></pre>
+1        1        3        5
+2        3        1        1
+3        2        2        3
+4        2        2        3
+5        3        2        3
+6        1        4        4</code></pre>
 </div>
 </div>
 <p>Save the features table:</p>
