@@ -1,7 +1,5 @@
 # Analyzing Time Series at Scale with Cluster Analysis in R
 
-WIP...
-
 Materials for the [Analyzing Time Series at Scale with Cluster Analysis in R](https://sites.google.com/view/dariia-mykhailyshyna/main/r-workshops-for-ukraine#h.9rof53i542dh) workshop for Ukraine.
 
 **When 📆:** Thursday, October 17th, 18:00 - 20:00 CEST 
