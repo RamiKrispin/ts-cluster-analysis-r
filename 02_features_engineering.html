@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rami Krispin">
-<meta name="dcterms.date" content="2024-10-17">
+<meta name="dcterms.date" content="2025-03-13">
 
 <title>Features Engineering</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 17, 2024</p>
+      <p class="date">March 13, 2025</p>
     </div>
   </div>
   
@@ -118,20 +118,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(us_gas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  area_name area_code process            process_name       date value units
-1  Arkansas        AR     VRS Residential Consumption 1993-01-01  8141  MMCF
-2  Arkansas        AR     VRS Residential Consumption 1996-06-01  1202  MMCF
-3  Arkansas        AR     VRS Residential Consumption 1997-10-01  1345  MMCF
-4  Arkansas        AR     VRS Residential Consumption 2000-04-01  2439  MMCF
-5  Arkansas        AR     VRS Residential Consumption 2003-04-01  3043  MMCF
-6  Arkansas        AR     VRS Residential Consumption 2003-11-01  2065  MMCF
-                                          description
-1 Arkansas Natural Gas Residential Consumption (MMcf)
-2 Arkansas Natural Gas Residential Consumption (MMcf)
-3 Arkansas Natural Gas Residential Consumption (MMcf)
-4 Arkansas Natural Gas Residential Consumption (MMcf)
-5 Arkansas Natural Gas Residential Consumption (MMcf)
-6 Arkansas Natural Gas Residential Consumption (MMcf)</code></pre>
+<pre><code>  area_name area_code process           process_name       date value units
+1  Colorado        CO     VCS Commercial Consumption 2024-11-01  6936  MMCF
+2  Colorado        CO     VCS Commercial Consumption 2024-01-01 10314  MMCF
+3  Colorado        CO     VCS Commercial Consumption 2024-06-01  1949  MMCF
+4  Colorado        CO     VCS Commercial Consumption 1989-01-01 10522  MMCF
+5  Colorado        CO     VCS Commercial Consumption 1989-09-01  2303  MMCF
+6  Colorado        CO     VCS Commercial Consumption 1990-10-01  2918  MMCF
+                                                                                              description
+1 Natural Gas Deliveries to Commercial Consumers (Including Vehicle Fuel through 1996) in Colorado (MMcf)
+2 Natural Gas Deliveries to Commercial Consumers (Including Vehicle Fuel through 1996) in Colorado (MMcf)
+3 Natural Gas Deliveries to Commercial Consumers (Including Vehicle Fuel through 1996) in Colorado (MMcf)
+4 Natural Gas Deliveries to Commercial Consumers (Including Vehicle Fuel through 1996) in Colorado (MMcf)
+5 Natural Gas Deliveries to Commercial Consumers (Including Vehicle Fuel through 1996) in Colorado (MMcf)
+6 Natural Gas Deliveries to Commercial Consumers (Including Vehicle Fuel through 1996) in Colorado (MMcf)</code></pre>
 </div>
 </div>
 <p>Reformat the <code>data.frame</code> into a tsibble object:</p>
@@ -143,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ts_obj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tsibble: 99,013 x 5 [1M]
+<pre><code># A tsibble: 100,583 x 5 [1M]
 # Key:       area_name, process [314]
    date       area_name process value    index
    &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;   &lt;int&gt;    &lt;mth&gt;
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  8 1989-08-01 Alabama   VCS      1117 1989 Aug
  9 1989-09-01 Alabama   VCS      1189 1989 Sep
 10 1989-10-01 Alabama   VCS      1382 1989 Oct
-# ℹ 99,003 more rows</code></pre>
+# ℹ 100,573 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>keys <span class="ot">&lt;-</span> <span class="fu">attributes</span>(ts_obj)<span class="sc">$</span>key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -290,41 +290,41 @@ so scaling has been disabled (`scale = FALSE`).</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(features_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>        trend        spike  linearity  curvature    e_acf1   e_acf10   entropy
-1 0.003057269 9.712750e-06 -0.9752748 -0.1708456 0.7523232 2.4133825 0.5646704
-2 0.948030396 6.726470e-07 -7.2015516 -3.0015766 0.4296742 0.4436997 0.4504870
-3 0.800618791 1.125195e-06 14.2253302 -3.1554623 0.5867871 0.8027259 0.3008994
-4 0.836803825 6.086026e-07 14.8085737 -1.5848186 0.3569556 1.0992692 0.2368032
-5 0.850064046 6.811054e-07 13.7873300  4.5584124 0.5766747 1.0069159 0.1810873
-6 0.055090260 9.327703e-06 -4.6036276 -0.2804776 0.7735770 2.5141998 0.5991920
+<pre><code>        trend        spike linearity  curvature    e_acf1   e_acf10   entropy
+1 0.003398831 9.524934e-06 -1.118874 -0.2623495 0.7508079 2.4240440 0.2459573
+2 0.935352253 7.909344e-07 -7.458762 -2.7312904 0.5398311 0.6312546 0.4496333
+3 0.801042782 1.055713e-06 14.326348 -3.1651073 0.5919222 0.7868258 0.2856361
+4 0.837720165 5.833055e-07 14.846169 -1.6891853 0.3550440 1.1029172 0.2335578
+5 0.849349395 6.548899e-07 14.073318  4.1932365 0.5751706 0.9701880 0.2109784
+6 0.057609881 9.146451e-06 -4.809029 -0.3580087 0.7726904 2.5173058 0.2716254
      x_acf1  x_acf10  diff1_acf1 diff1_acf10 diff2_acf1 diff2_acf10 arch_stat
-1 0.7530430 2.389684  0.29888389  0.57436812 -0.3554251   0.1948968 0.3704131
-2 0.9643920 7.019090 -0.18144404  0.07357371 -0.6279015   0.5012790 0.8498117
-3 0.9053211 5.520940  0.02418422  0.32177527 -0.4643220   0.3928694 0.7123761
-4 0.8877402 6.144797 -0.07201543  0.69852439 -0.4692256   0.4904081 0.5880839
-5 0.9334901 6.614953 -0.30579509  0.33282521 -0.6917163   0.8276553 0.6707924
-6 0.7845562 2.122313  0.45377070  0.79226036 -0.1257789   0.1624230 0.5199401
+1 0.7521144 2.397351  0.29144579  0.57539570 -0.3681277   0.2093100 0.3694279
+2 0.9648267 7.051760 -0.17417960  0.06775811 -0.6250807   0.4925355 0.8523744
+3 0.9121012 5.506638  0.01943907  0.32086202 -0.4593933   0.3962221 0.7257865
+4 0.8910733 6.156808 -0.07677648  0.70639299 -0.4699257   0.5049839 0.5968198
+5 0.9289929 6.678439 -0.29188831  0.31939297 -0.6892386   0.8210981 0.6521779
+6 0.7855201 2.112944  0.44964235  0.78850610 -0.1328695   0.1619485 0.5224504
   embed2_incircle_1 embed2_incircle_2        ac_9 firstmin_ac      trev_num
-1                 0                 0 -0.07868176           6 -7.229022e+07
-2                 0                 0  0.72951504          74  8.126437e+00
-3                 0                 0  0.68210089           4 -9.869577e+09
-4                 0                 0  0.67427730           3 -9.078644e+10
-5                 0                 0  0.77306245           6 -1.963808e+08
-6                 0                 0 -0.04204759           6  8.863228e+08
+1                 0                 0 -0.08477898           6 -6.529396e+07
+2                 0                 0  0.73322456          72  7.893855e+00
+3                 0                 0  0.67652700           4 -2.424188e+10
+4                 0                 0  0.67578292           3 -1.058054e+11
+5                 0                 0  0.78486321           6 -1.562761e+08
+6                 0                 0 -0.04709358           6  9.268957e+08
   motiftwo_entro3 walker_propcross nonlinearity   x_pacf5 diff1x_pacf5
-1       1.5666745        0.1807512    0.9068600 0.9851775   0.20617291
-2       0.7702653        0.1264368    0.1082076 0.9606749   0.04383207
-3       1.2237333        0.2624113    0.1502996 0.9320975   0.15499032
-4       1.2732961        0.3120567    0.9465369 1.1507212   0.43904278
-5       1.2211373        0.2021277    0.5132332 1.0126882   0.16944682
-6       1.5166308        0.1666667    0.4290233 1.0753667   0.33320892
+1       1.5657273       0.18097448    0.9306287 0.9779110   0.20382194
+2       0.7608726       0.09497207    0.1233921 0.9626648   0.04080339
+3       1.2730113       0.26132404    0.2245167 0.9344324   0.16958371
+4       1.2294644       0.31358885    0.9265772 1.1232687   0.47236137
+5       1.1681461       0.20209059    0.5287830 0.9747106   0.16018364
+6       1.5120847       0.16705336    0.4363147 1.0702491   0.32722026
   diff2x_pacf5 area_name process success
-1    0.2335997   Alabama     VCS    TRUE
-2    0.6195178   Alabama     VDV    TRUE
-3    0.5246779   Alabama     VEU    TRUE
-4    0.7932931   Alabama     VGT    TRUE
-5    0.6569552   Alabama     VIN    TRUE
-6    0.1429389   Alabama     VRS    TRUE</code></pre>
+1    0.2414457   Alabama     VCS    TRUE
+2    0.6166896   Alabama     VDV    TRUE
+3    0.5340146   Alabama     VEU    TRUE
+4    0.8097153   Alabama     VGT    TRUE
+5    0.6393660   Alabama     VIN    TRUE
+6    0.1420455   Alabama     VRS    TRUE</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(features_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -360,41 +360,41 @@ TRUE
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(features)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>        trend        spike  linearity  curvature    e_acf1   e_acf10   entropy
-1 0.003057269 9.712750e-06 -0.9752748 -0.1708456 0.7523232 2.4133825 0.5646704
-2 0.948030396 6.726470e-07 -7.2015516 -3.0015766 0.4296742 0.4436997 0.4504870
-3 0.800618791 1.125195e-06 14.2253302 -3.1554623 0.5867871 0.8027259 0.3008994
-4 0.836803825 6.086026e-07 14.8085737 -1.5848186 0.3569556 1.0992692 0.2368032
-5 0.850064046 6.811054e-07 13.7873300  4.5584124 0.5766747 1.0069159 0.1810873
-6 0.055090260 9.327703e-06 -4.6036276 -0.2804776 0.7735770 2.5141998 0.5991920
+<pre><code>        trend        spike linearity  curvature    e_acf1   e_acf10   entropy
+1 0.003398831 9.524934e-06 -1.118874 -0.2623495 0.7508079 2.4240440 0.2459573
+2 0.935352253 7.909344e-07 -7.458762 -2.7312904 0.5398311 0.6312546 0.4496333
+3 0.801042782 1.055713e-06 14.326348 -3.1651073 0.5919222 0.7868258 0.2856361
+4 0.837720165 5.833055e-07 14.846169 -1.6891853 0.3550440 1.1029172 0.2335578
+5 0.849349395 6.548899e-07 14.073318  4.1932365 0.5751706 0.9701880 0.2109784
+6 0.057609881 9.146451e-06 -4.809029 -0.3580087 0.7726904 2.5173058 0.2716254
      x_acf1  x_acf10  diff1_acf1 diff1_acf10 diff2_acf1 diff2_acf10 arch_stat
-1 0.7530430 2.389684  0.29888389  0.57436812 -0.3554251   0.1948968 0.3704131
-2 0.9643920 7.019090 -0.18144404  0.07357371 -0.6279015   0.5012790 0.8498117
-3 0.9053211 5.520940  0.02418422  0.32177527 -0.4643220   0.3928694 0.7123761
-4 0.8877402 6.144797 -0.07201543  0.69852439 -0.4692256   0.4904081 0.5880839
-5 0.9334901 6.614953 -0.30579509  0.33282521 -0.6917163   0.8276553 0.6707924
-6 0.7845562 2.122313  0.45377070  0.79226036 -0.1257789   0.1624230 0.5199401
+1 0.7521144 2.397351  0.29144579  0.57539570 -0.3681277   0.2093100 0.3694279
+2 0.9648267 7.051760 -0.17417960  0.06775811 -0.6250807   0.4925355 0.8523744
+3 0.9121012 5.506638  0.01943907  0.32086202 -0.4593933   0.3962221 0.7257865
+4 0.8910733 6.156808 -0.07677648  0.70639299 -0.4699257   0.5049839 0.5968198
+5 0.9289929 6.678439 -0.29188831  0.31939297 -0.6892386   0.8210981 0.6521779
+6 0.7855201 2.112944  0.44964235  0.78850610 -0.1328695   0.1619485 0.5224504
   embed2_incircle_1 embed2_incircle_2        ac_9 firstmin_ac      trev_num
-1                 0                 0 -0.07868176           6 -7.229022e+07
-2                 0                 0  0.72951504          74  8.126437e+00
-3                 0                 0  0.68210089           4 -9.869577e+09
-4                 0                 0  0.67427730           3 -9.078644e+10
-5                 0                 0  0.77306245           6 -1.963808e+08
-6                 0                 0 -0.04204759           6  8.863228e+08
+1                 0                 0 -0.08477898           6 -6.529396e+07
+2                 0                 0  0.73322456          72  7.893855e+00
+3                 0                 0  0.67652700           4 -2.424188e+10
+4                 0                 0  0.67578292           3 -1.058054e+11
+5                 0                 0  0.78486321           6 -1.562761e+08
+6                 0                 0 -0.04709358           6  9.268957e+08
   motiftwo_entro3 walker_propcross nonlinearity   x_pacf5 diff1x_pacf5
-1       1.5666745        0.1807512    0.9068600 0.9851775   0.20617291
-2       0.7702653        0.1264368    0.1082076 0.9606749   0.04383207
-3       1.2237333        0.2624113    0.1502996 0.9320975   0.15499032
-4       1.2732961        0.3120567    0.9465369 1.1507212   0.43904278
-5       1.2211373        0.2021277    0.5132332 1.0126882   0.16944682
-6       1.5166308        0.1666667    0.4290233 1.0753667   0.33320892
-  diff2x_pacf5 area_name process       PC1        PC2        PC3
-1    0.2335997   Alabama     VCS -2.130900 -1.3036161  0.9384032
-2    0.6195178   Alabama     VDV  4.626793  1.4217552  1.0713550
-3    0.5246779   Alabama     VEU  2.536517  0.1059892 -1.3959387
-4    0.7932931   Alabama     VGT  2.799819  0.3110900 -2.1326149
-5    0.6569552   Alabama     VIN  4.075354  0.3044582 -1.6657347
-6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529</code></pre>
+1       1.5657273       0.18097448    0.9306287 0.9779110   0.20382194
+2       0.7608726       0.09497207    0.1233921 0.9626648   0.04080339
+3       1.2730113       0.26132404    0.2245167 0.9344324   0.16958371
+4       1.2294644       0.31358885    0.9265772 1.1232687   0.47236137
+5       1.1681461       0.20209059    0.5287830 0.9747106   0.16018364
+6       1.5120847       0.16705336    0.4363147 1.0702491   0.32722026
+  diff2x_pacf5 area_name process       PC1         PC2        PC3
+1    0.2414457   Alabama     VCS -1.976452 -1.04772486  0.7012179
+2    0.6166896   Alabama     VDV  4.464822  1.79678924  1.0697063
+3    0.5340146   Alabama     VEU  2.396487  0.34041682 -1.3673512
+4    0.8097153   Alabama     VGT  2.720845  0.63121447 -2.2712976
+5    0.6393660   Alabama     VIN  3.911493  0.62041401 -1.5097302
+6    0.1420455   Alabama     VRS -2.882772 -0.03653145  0.7291997</code></pre>
 </div>
 </div>
 <p>Scale the features table:</p>
@@ -416,48 +416,48 @@ TRUE
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(features)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>        trend        spike  linearity  curvature    e_acf1   e_acf10   entropy
-1 0.003057269 9.712750e-06 -0.9752748 -0.1708456 0.7523232 2.4133825 0.5646704
-2 0.948030396 6.726470e-07 -7.2015516 -3.0015766 0.4296742 0.4436997 0.4504870
-3 0.800618791 1.125195e-06 14.2253302 -3.1554623 0.5867871 0.8027259 0.3008994
-4 0.836803825 6.086026e-07 14.8085737 -1.5848186 0.3569556 1.0992692 0.2368032
-5 0.850064046 6.811054e-07 13.7873300  4.5584124 0.5766747 1.0069159 0.1810873
-6 0.055090260 9.327703e-06 -4.6036276 -0.2804776 0.7735770 2.5141998 0.5991920
+<pre><code>        trend        spike linearity  curvature    e_acf1   e_acf10   entropy
+1 0.003398831 9.524934e-06 -1.118874 -0.2623495 0.7508079 2.4240440 0.2459573
+2 0.935352253 7.909344e-07 -7.458762 -2.7312904 0.5398311 0.6312546 0.4496333
+3 0.801042782 1.055713e-06 14.326348 -3.1651073 0.5919222 0.7868258 0.2856361
+4 0.837720165 5.833055e-07 14.846169 -1.6891853 0.3550440 1.1029172 0.2335578
+5 0.849349395 6.548899e-07 14.073318  4.1932365 0.5751706 0.9701880 0.2109784
+6 0.057609881 9.146451e-06 -4.809029 -0.3580087 0.7726904 2.5173058 0.2716254
      x_acf1  x_acf10  diff1_acf1 diff1_acf10 diff2_acf1 diff2_acf10 arch_stat
-1 0.7530430 2.389684  0.29888389  0.57436812 -0.3554251   0.1948968 0.3704131
-2 0.9643920 7.019090 -0.18144404  0.07357371 -0.6279015   0.5012790 0.8498117
-3 0.9053211 5.520940  0.02418422  0.32177527 -0.4643220   0.3928694 0.7123761
-4 0.8877402 6.144797 -0.07201543  0.69852439 -0.4692256   0.4904081 0.5880839
-5 0.9334901 6.614953 -0.30579509  0.33282521 -0.6917163   0.8276553 0.6707924
-6 0.7845562 2.122313  0.45377070  0.79226036 -0.1257789   0.1624230 0.5199401
+1 0.7521144 2.397351  0.29144579  0.57539570 -0.3681277   0.2093100 0.3694279
+2 0.9648267 7.051760 -0.17417960  0.06775811 -0.6250807   0.4925355 0.8523744
+3 0.9121012 5.506638  0.01943907  0.32086202 -0.4593933   0.3962221 0.7257865
+4 0.8910733 6.156808 -0.07677648  0.70639299 -0.4699257   0.5049839 0.5968198
+5 0.9289929 6.678439 -0.29188831  0.31939297 -0.6892386   0.8210981 0.6521779
+6 0.7855201 2.112944  0.44964235  0.78850610 -0.1328695   0.1619485 0.5224504
   embed2_incircle_1 embed2_incircle_2        ac_9 firstmin_ac      trev_num
-1                 0                 0 -0.07868176           6 -7.229022e+07
-2                 0                 0  0.72951504          74  8.126437e+00
-3                 0                 0  0.68210089           4 -9.869577e+09
-4                 0                 0  0.67427730           3 -9.078644e+10
-5                 0                 0  0.77306245           6 -1.963808e+08
-6                 0                 0 -0.04204759           6  8.863228e+08
+1                 0                 0 -0.08477898           6 -6.529396e+07
+2                 0                 0  0.73322456          72  7.893855e+00
+3                 0                 0  0.67652700           4 -2.424188e+10
+4                 0                 0  0.67578292           3 -1.058054e+11
+5                 0                 0  0.78486321           6 -1.562761e+08
+6                 0                 0 -0.04709358           6  9.268957e+08
   motiftwo_entro3 walker_propcross nonlinearity   x_pacf5 diff1x_pacf5
-1       1.5666745        0.1807512    0.9068600 0.9851775   0.20617291
-2       0.7702653        0.1264368    0.1082076 0.9606749   0.04383207
-3       1.2237333        0.2624113    0.1502996 0.9320975   0.15499032
-4       1.2732961        0.3120567    0.9465369 1.1507212   0.43904278
-5       1.2211373        0.2021277    0.5132332 1.0126882   0.16944682
-6       1.5166308        0.1666667    0.4290233 1.0753667   0.33320892
-  diff2x_pacf5 area_name process       PC1        PC2        PC3 cluster2
-1    0.2335997   Alabama     VCS -2.130900 -1.3036161  0.9384032        1
-2    0.6195178   Alabama     VDV  4.626793  1.4217552  1.0713550        2
-3    0.5246779   Alabama     VEU  2.536517  0.1059892 -1.3959387        2
-4    0.7932931   Alabama     VGT  2.799819  0.3110900 -2.1326149        2
-5    0.6569552   Alabama     VIN  4.075354  0.3044582 -1.6657347        2
-6    0.1429389   Alabama     VRS -2.950452 -0.1183790  0.8885529        1
+1       1.5657273       0.18097448    0.9306287 0.9779110   0.20382194
+2       0.7608726       0.09497207    0.1233921 0.9626648   0.04080339
+3       1.2730113       0.26132404    0.2245167 0.9344324   0.16958371
+4       1.2294644       0.31358885    0.9265772 1.1232687   0.47236137
+5       1.1681461       0.20209059    0.5287830 0.9747106   0.16018364
+6       1.5120847       0.16705336    0.4363147 1.0702491   0.32722026
+  diff2x_pacf5 area_name process       PC1         PC2        PC3 cluster2
+1    0.2414457   Alabama     VCS -1.976452 -1.04772486  0.7012179        1
+2    0.6166896   Alabama     VDV  4.464822  1.79678924  1.0697063        2
+3    0.5340146   Alabama     VEU  2.396487  0.34041682 -1.3673512        2
+4    0.8097153   Alabama     VGT  2.720845  0.63121447 -2.2712976        2
+5    0.6393660   Alabama     VIN  3.911493  0.62041401 -1.5097302        2
+6    0.1420455   Alabama     VRS -2.882772 -0.03653145  0.7291997        1
   cluster3 cluster4 cluster5
-1        1        3        5
-2        3        1        1
-3        2        2        3
-4        2        2        3
-5        3        2        3
-6        1        4        4</code></pre>
+1        2        4        1
+2        1        1        4
+3        1        2        3
+4        1        2        3
+5        1        2        3
+6        2        4        1</code></pre>
 </div>
 </div>
 <p>Save the features table:</p>

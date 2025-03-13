@@ -10,7 +10,6 @@ ts <- read.csv(file = "https://raw.githubusercontent.com/RamiKrispin/ts-cluster-
     tsibble::as_tsibble(index = index, key = c(area_name, process_name))
 features <- read.csv(file = "https://raw.githubusercontent.com/RamiKrispin/ts-cluster-analysis-r/refs/heads/main/data/features.csv")
 
-= 
 features_list <- names(features)
 
 features_list <- features_list[-which(features_list %in% c("process", "PC1", "PC2", "PC3", "process", "area_name"))]
@@ -97,14 +96,14 @@ ui <- page_navbar(
         ),
         fluidRow(
             column(
-            plotly::plotlyOutput("pca_plot", height = "500px", width = "100%"),
-            width = 6),
+                plotly::plotlyOutput("pca_plot", height = "500px", width = "100%"),
+                width = 6
+            ),
             column(plotly::plotlyOutput("series", height = "400px"), width = 6),
             conditionalPanel(
                 condition = "input.view == 'Cluster'",
                 plotly::plotlyOutput("cluster_plot", height = "400px")
             )
-            
         )
     )
 )
@@ -287,5 +286,3 @@ shinyApp(ui = ui, server = server)
 
 
 # shinylive::export(appdir = ".", destdir = "docs", package_cache = FALSE, wasm_packages =  FALSE)
-
-x = 1
